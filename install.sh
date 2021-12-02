@@ -94,7 +94,7 @@ checkfreespace
 echo "+ Getting NextionDriver ..."
 cd /tmp
 rm -rf /tmp/NextionDriver
-git clone https://github.com/on7lds/NextionDriver.git;
+git clone https://github.com/bh4sym/NextionDriver.git;
 cd /tmp/NextionDriver 2>/dev/null
 if [ "$(pwd)" != "/tmp/NextionDriver" ]; then echo "- Getting NextionDriver failed. Cannot continue."; exit; fi
 
