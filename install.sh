@@ -294,33 +294,3 @@ if [ "$ND" = "" ]; then
     herstart
     exit
 fi
-
-
-########## Check for Update ##########
-VERSIE=$($ND -V | grep version | sed "s/^.*version //")
-V=$(echo $VERSIE | sed 's/\.//')
-echo "+ NextionDriver $VERSIE found at $ND"
-echo "+ We are at version $THISVERSION"
-
-
-if [ $TV  -gt $V ]; then
-    echo "+ Start Update"
-    compileer
-    $SYSTEMCTL
-    $NDSTOP
-    $MMDVMSTOP
-    killall -q -I MMDVMHost
-    killall -q -I NextionDriver
-    killall -9 -q -I MMDVMHost
-    killall -9 -q -I NextionDriver
-    cp NextionDriver $BINDIR
-    echo -e "\n+ Check version"
-    NextionDriver -V
-    checkversion
-    helpfiles
-    echo -e "\n+ NextionDriver updated\n"
-    herstart
-else
-    echo -e "\n- No need to update.\n"
-    exit
-fi
