@@ -51,7 +51,7 @@ checkfreespace() {
 
 if [ "$(which gcc)" = "" ]; then echo "- I need gcc. Please install it." exit; fi
 if [ "$(which git)" = "" ]; then echo "- I need git. Please install it." exit; fi
-PATH=/opt/MMDVMHost:$PATH
+PATH=/etc/MMDVMHost:$PATH
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )" #"
 if [ "$EUID" -ne 0 ]
   then echo "- Please run as root (did you forget to prepend 'sudo' ?)"
@@ -112,7 +112,7 @@ fi
 PISTAR=$(if [ -f /etc/pistar-release ];then echo "OK"; fi)
 MMDVM=$(which MMDVMHost)
 BINDIR=$(echo "$MMDVM" | sed "s/\/MMDVMHost//")
-CONFIGFILE="MMDVM.ini"
+CONFIGFILE="mmdvmhost"
 CONFIGDIR="/etc/"
 FILESDIR="/usr/local/etc/"
 SYSTEMCTL="systemctl daemon-reload"
