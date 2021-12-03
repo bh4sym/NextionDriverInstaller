@@ -192,15 +192,15 @@ if [ "$PISTAR" = "OK" ]; then
 fi
 if [ "$CHECK" = "" ]; then
 #    echo "Bindir [$BINDIR]"
-    if [ "$BINDIR" = "/opt/MMDVMHost" ]; then
+    if [ "$BINDIR" = "/etc/mmdvmhost" ]; then
         echo ""
-        echo "+ Found MMDVMHost in /opt."
+        echo "+ Found mmdvmhost in /etc."
         echo "+ I'm going to suppose you followed "
         echo "+  https://g0wfv.wordpress.com/how-to-auto-start-mmdvmhost-as-a-service-on-boot-in-raspbian-jessie/"
         echo ""
         echo ""
-        CONFIGFILE="MMDVMHost.ini"
-        CONFIGDIR="/opt/MMDVMHost"
+        CONFIGFILE="mmdvmhost"
+        CONFIGDIR="/etc/mmdvmhost"
         CHECK="JESSIE"
     fi
 fi
@@ -214,7 +214,7 @@ if [ "$CHECK" = "" ]; then
 fi
 if [ "$MMDVM" = "" ]; then
     echo ""
-    echo "- No MMDVMHost found,"
+    echo "- No mmdvmhost found,"
     echo "- so why would you install NextionDriver ?"
     echo "- Cannot continue"
     echo ""
@@ -257,26 +257,13 @@ if [ "$ND" = "" ]; then
     $NDOUDSTOP 2>/dev/null
     $NDSTOP
     $MMDVMSTOP
-    killall -q -I MMDVMHost
-    killall -9 -q -I MMDVMHost
+    killall -q -I mmdvmhost
+    killall -9 -q -I mmdvmhost
     systemctl disable mmdvmhost
     systemctl disable nextion-helper 2>/dev/null
     systemctl disable nextiondriver
-    if [ "$CHECK" = "PISTAR" ]; then 
-        echo "+ found PISTAR"
-        cp $DIR"/nextiondriver.service.binary.pistar" /usr/local/sbin/nextiondriver.service
-        if [ $(cat /usr/local/sbin/mmdvmhost.service | grep extion | wc -l) -gt 0 ]; then
-            echo "+ Restoring mmdvmhost.service binary"
-            rm /usr/local/sbin/mmdvmhost.service
-            git --work-tree=/usr/local/sbin/ --git-dir=/usr/local/sbin/.git checkout mmdvmhost.service
-        fi
-        echo "+ Installing services"
-        cp $DIR"/mmdvmhost.service.pistar" /lib/systemd/system/mmdvmhost.service
-        cp $DIR"/nextiondriver.service.pistar" /lib/systemd/system/nextiondriver.service
-    fi
     if [ "$CHECK" = "JESSIE" ]; then 
         cp $DIR"/mmdvmhost.service.jessie" /lib/systemd/system/mmdvmhost.service
-        cp $DIR"/mmdvmhost.timer.jessie" /lib/systemd/system/mmdvmhost.timer
         rm -f /lib/systemd/system/nextion-helper.service
         cp $DIR"/nextiondriver.service.jessie" /lib/systemd/system/nextiondriver.service
     fi
@@ -292,34 +279,5 @@ if [ "$ND" = "" ]; then
     echo -e "+ We will now start the configuration program ...\n"
     $DIR/NextionDriver_ConvertConfig $CONFIGDIR$CONFIGFILE
     herstart
-    exit
-fi
-
-########## Check for Update ##########
-VERSIE=$($ND -V | grep version | sed "s/^.*version //")
-V=$(echo $VERSIE | sed 's/\.//')
-echo "+ NextionDriver $VERSIE found at $ND"
-echo "+ We are at version $THISVERSION"
-
-
-if [ $TV  -gt $V ]; then
-    echo "+ Start Update"
-    compileer
-    $SYSTEMCTL
-    $NDSTOP
-    $MMDVMSTOP
-    killall -q -I MMDVMHost
-    killall -q -I NextionDriver
-    killall -9 -q -I MMDVMHost
-    killall -9 -q -I NextionDriver
-    cp NextionDriver $BINDIR
-    echo -e "\n+ Check version"
-    NextionDriver -V
-    checkversion
-    helpfiles
-    echo -e "\n+ NextionDriver updated\n"
-    herstart
-else
-    echo -e "\n- No need to update.\n"
     exit
 fi
