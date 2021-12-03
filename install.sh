@@ -64,7 +64,7 @@ echo "#######################################################################"
 echo " This is the NextionDriver installer."
 echo ""
 echo " This installer will install the Nexiondriver"
-echo "  in an already working MMDVMHost configuration"
+echo "  in an already working mmdvmhost configuration"
 echo "  with a WORKING Nextion display."
 echo " It uses the current configuration to ADD the NextionDriver."
 echo ""
@@ -110,8 +110,8 @@ if [ "$ND" != "" ]; then
  V=$(echo $VERSIE | sed 's/\.//')
 fi
 PISTAR=$(if [ -f /etc/pistar-release ];then echo "OK"; fi)
-MMDVM=$(which MMDVMHost)
-BINDIR=$(echo "$MMDVM" | sed "s/\/MMDVMHost//")
+mmdvm=$(which mmdvmhost)
+BINDIR=$(echo "$mmdvm" | sed "s/\/mmdvmhost//")
 CONFIGFILE="mmdvmhost"
 CONFIGDIR="/etc/"
 FILESDIR="/usr/local/etc/"
